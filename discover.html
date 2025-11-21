@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwiftBuy - Discover Products</title>
+  <link rel="stylesheet" href="shared-styles.css">
+  <link rel="stylesheet" href="notifications.css">
+</head>
+<style>
+.product-quiz {
+  padding: 40px 20px;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  margin: 30px 20px;
+  border-radius: 15px;
+}
+
+.quiz-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.quiz-question h3 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 1.8em;
+}
+
+.quiz-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+.quiz-option {
+  padding: 20px;
+  background: white;
+  border: 3px solid #e0e0e0;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1.1em;
+  transition: all 0.3s;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.quiz-option:nth-child(1) { animation-delay: 0.1s; }
+.quiz-option:nth-child(2) { animation-delay: 0.2s; }
+.quiz-option:nth-child(3) { animation-delay: 0.3s; }
+.quiz-option:nth-child(4) { animation-delay: 0.4s; }
+
+.quiz-option:hover {
+  border-color: #0074D9;
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 116, 217, 0.2);
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  padding: 10px;
+}
+
+.product-card {
+  text-align: center;
+  border: 1px solid rgba(0, 116, 217, 0.1);
+  border-radius: 10px;
+  padding: 15px;
+  transition: all 0.3s ease;
+  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 116, 217, 0.2);
+}
+
+.product-card img {
+  width: 100%;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+.recently-viewed, .wishlist-section {
+  padding: 40px 20px;
+  background: rgba(255, 255, 255, 0.9);
+  margin: 30px 20px;
+  border-radius: 15px;
+}
+
+.wishlist-empty {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.empty-icon {
+  font-size: 4em;
+  display: block;
+  margin-bottom: 20px;
+}
+</style>
+<body>
+  <header class="navbar">
+    <div class="logo">SwiftBuy</div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="discover.html">Discover</a></li>
+        <li><a href="cart.html">Cart</a></li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="product-quiz">
+    <h2>🎯 Find Your Perfect Product</h2>
+    <p class="subtitle" style="text-align: center; color: #666; margin-bottom: 30px;">Answer 3 quick questions and get personalized recommendations</p>
+    <div class="quiz-container" id="quizContainer">
+      <div class="quiz-question" id="quizQuestion">
+        <h3>What are you shopping for today?</h3>
+        <div class="quiz-options">
+          <button class="quiz-option" onclick="handleQuizAnswer('electronics')">📱 Electronics</button>
+          <button class="quiz-option" onclick="handleQuizAnswer('fashion')">👔 Fashion</button>
+          <button class="quiz-option" onclick="handleQuizAnswer('home')">🏠 Home & Kitchen</button>
+          <button class="quiz-option" onclick="handleQuizAnswer('groceries')">🛒 Groceries</button>
+        </div>
+      </div>
+      <div class="quiz-results" id="quizResults" style="display: none;">
+        <h3>Perfect Matches For You!</h3>
+        <div class="product-grid" id="quizProducts"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="recently-viewed">
+    <h2>👀 Recently Viewed</h2>
+    <div class="product-grid" id="recentlyViewed">
+      <p style="text-align: center; padding: 20px; color: #666;">Start browsing to see your recently viewed products here!</p>
+    </div>
+  </section>
+
+  <section class="wishlist-section">
+    <h2>❤️ Your Wishlist</h2>
+    <p class="subtitle" style="text-align: center; color: #666; margin-bottom: 20px;">Save products you love for later</p>
+    <div class="wishlist-grid" id="wishlistItems">
+      <div class="wishlist-empty">
+        <span class="empty-icon">❤️</span>
+        <p>Your wishlist is empty</p>
+        <p class="empty-subtitle" style="color: #666;">Start adding products you love!</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2024 SwiftBuy. All rights reserved.</p>
+  </footer>
+
+  <script src="ai-recommendations.js"></script>
+  <script>
+    let quizAnswers = [];
+    window.handleQuizAnswer = function(answer) {
+      quizAnswers.push(answer);
+      if (quizAnswers.length === 1) {
+        document.getElementById('quizQuestion').innerHTML = `
+          <h3>What's your budget range?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" onclick="handleQuizAnswer('budget-low')">Under Rs. 5,000</button>
+            <button class="quiz-option" onclick="handleQuizAnswer('budget-mid')">Rs. 5,000 - 25,000</button>
+            <button class="quiz-option" onclick="handleQuizAnswer('budget-high')">Above Rs. 25,000</button>
+          </div>
+        `;
+      } else if (quizAnswers.length === 2) {
+        document.getElementById('quizQuestion').innerHTML = `
+          <h3>What's most important to you?</h3>
+          <div class="quiz-options">
+            <button class="quiz-option" onclick="handleQuizAnswer('quality')">Quality</button>
+            <button class="quiz-option" onclick="handleQuizAnswer('price')">Best Price</button>
+            <button class="quiz-option" onclick="handleQuizAnswer('features')">Latest Features</button>
+          </div>
+        `;
+      } else {
+        showQuizResults();
+      }
+    };
+
+    function showQuizResults() {
+      document.getElementById('quizQuestion').style.display = 'none';
+      document.getElementById('quizResults').style.display = 'block';
+      
+      if (window.AIRecommendations) {
+        const recommendations = window.AIRecommendations.engine.getRecommendations(4);
+        const container = document.getElementById('quizProducts');
+        container.innerHTML = recommendations.map(product => `
+          <div class="product-card" onclick="handleProductClick('${product.name}')">
+            <img src="${product.image}" alt="${product.name}">
+            <h3>${product.name}</h3>
+            <p class="price">RS: ${product.price.toLocaleString()}</p>
+            <button onclick="event.stopPropagation(); addToCart('${product.name}', ${product.price})">Add to Cart</button>
+          </div>
+        `).join('');
+      }
+    }
+
+    function loadRecentlyViewed() {
+      const viewed = JSON.parse(localStorage.getItem('recentlyViewed')) || [];
+      const container = document.getElementById('recentlyViewed');
+      if (!container) return;
+      
+      if (viewed.length === 0) {
+        container.innerHTML = '<p style="text-align: center; padding: 20px; color: #666;">Start browsing to see your recently viewed products here!</p>';
+        return;
+      }
+      
+      if (window.AIRecommendations) {
+        const products = viewed.slice(0, 4).map(name => {
+          return window.AIRecommendations.PRODUCT_DATABASE[name];
+        }).filter(Boolean);
+        
+        container.innerHTML = products.map(product => `
+          <div class="product-card" onclick="handleProductClick('${product.name}')">
+            <img src="${product.image}" alt="${product.name}">
+            <h3>${product.name}</h3>
+            <p class="price">RS: ${product.price.toLocaleString()}</p>
+            <button onclick="event.stopPropagation(); addToCart('${product.name}', ${product.price})">Add to Cart</button>
+          </div>
+        `).join('');
+      }
+    }
+
+    function handleProductClick(productName) {
+      window.location.href = `products.html?product=${encodeURIComponent(productName)}`;
+    }
+
+    function addToCart(productName, productPrice) {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const existingProductIndex = cart.findIndex((item) => item.name === productName);
+      if (existingProductIndex !== -1) {
+        cart[existingProductIndex].quantity += 1;
+      } else {
+        cart.push({ name: productName, price: productPrice, quantity: 1 });
+      }
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert(`${productName} has been added to the cart!`);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(loadRecentlyViewed, 1000);
+    });
+  </script>
+</body>
+</html>
+

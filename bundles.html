@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwiftBuy - Product Bundles</title>
+  <link rel="stylesheet" href="shared-styles.css">
+</head>
+<style>
+.product-bundles {
+  padding: 40px 20px;
+  background: rgba(255, 255, 255, 0.9);
+  margin: 30px 20px;
+  border-radius: 15px;
+}
+
+.bundles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.bundle-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 30px;
+  border-radius: 15px;
+  color: white;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.bundle-card:nth-child(1) { animation-delay: 0.1s; }
+.bundle-card:nth-child(2) { animation-delay: 0.2s; }
+.bundle-card:nth-child(3) { animation-delay: 0.3s; }
+
+.bundle-card:hover {
+  transform: translateY(-5px);
+}
+
+.bundle-card h3 {
+  font-size: 1.8em;
+  margin-bottom: 20px;
+}
+
+.bundle-products {
+  margin: 20px 0;
+  font-size: 1.1em;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+}
+
+.bundle-price {
+  margin: 20px 0;
+}
+
+.old-price {
+  text-decoration: line-through;
+  opacity: 0.7;
+  margin-right: 15px;
+  font-size: 1.2em;
+}
+
+.new-price {
+  font-size: 2em;
+  font-weight: bold;
+}
+
+.bundle-btn {
+  margin-top: 20px;
+  padding: 12px 30px;
+  background: white;
+  color: #667eea;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  font-size: 1.1em;
+  transition: all 0.3s;
+}
+
+.bundle-btn:hover {
+  background: #f0f0f0;
+  transform: scale(1.05);
+}
+</style>
+<body>
+  <header class="navbar">
+    <div class="logo">SwiftBuy</div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="bundles.html">Bundles</a></li>
+        <li><a href="cart.html">Cart</a></li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="product-bundles">
+    <h2 style="text-align: center; margin-bottom: 10px;">🎁 Complete The Set</h2>
+    <p class="subtitle" style="text-align: center; color: #666; margin-bottom: 40px;">Save more with these curated bundles</p>
+    <div class="bundles-grid">
+      <div class="bundle-card">
+        <h3>Tech Starter Pack</h3>
+        <div class="bundle-products">
+          <span>Laptop + Headphones</span>
+        </div>
+        <div class="bundle-price">
+          <span class="old-price">Rs. 105,000</span>
+          <span class="new-price">Rs. 95,000</span>
+        </div>
+        <p style="margin: 15px 0;">Save Rs. 10,000</p>
+        <button class="bundle-btn" onclick="addBundle('Tech Starter Pack', 95000)">Add Bundle to Cart</button>
+      </div>
+      <div class="bundle-card">
+        <h3>Home Essentials</h3>
+        <div class="bundle-products">
+          <span>Kettle + Blender + Cooker</span>
+        </div>
+        <div class="bundle-price">
+          <span class="old-price">Rs. 8,650</span>
+          <span class="new-price">Rs. 7,500</span>
+        </div>
+        <p style="margin: 15px 0;">Save Rs. 1,150</p>
+        <button class="bundle-btn" onclick="addBundle('Home Essentials', 7500)">Add Bundle to Cart</button>
+      </div>
+      <div class="bundle-card">
+        <h3>Fashion Combo</h3>
+        <div class="bundle-products">
+          <span>Track Suit + Shirt + Shoes</span>
+        </div>
+        <div class="bundle-price">
+          <span class="old-price">Rs. 8,600</span>
+          <span class="new-price">Rs. 7,200</span>
+        </div>
+        <p style="margin: 15px 0;">Save Rs. 1,400</p>
+        <button class="bundle-btn" onclick="addBundle('Fashion Combo', 7200)">Add Bundle to Cart</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2024 SwiftBuy. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function addBundle(bundleName, price) {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      cart.push({ name: bundleName, price: price, quantity: 1 });
+      localStorage.setItem("cart", JSON.stringify(cart));
+      alert(`${bundleName} has been added to your cart!`);
+    }
+  </script>
+</body>
+</html>
+

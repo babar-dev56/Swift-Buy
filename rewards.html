@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwiftBuy - Rewards & Badges</title>
+  <link rel="stylesheet" href="shared-styles.css">
+</head>
+<style>
+.loyalty-section {
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  margin: 30px 20px;
+  border-radius: 15px;
+  color: white;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.loyalty-dashboard {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.points-display {
+  text-align: center;
+}
+
+.points-circle {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 20px;
+  border: 5px solid white;
+  animation: scaleIn 0.6s ease-out;
+  transition: transform 0.3s ease;
+}
+
+.points-circle:hover {
+  transform: scale(1.1);
+}
+
+.points-number {
+  font-size: 2.5em;
+  font-weight: bold;
+}
+
+.points-label {
+  font-size: 0.9em;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 15px 0;
+}
+
+.progress-fill {
+  height: 100%;
+  background: white;
+  transition: width 0.5s;
+}
+
+.badges-container h3 {
+  margin-bottom: 20px;
+}
+
+.badges-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.badge {
+  text-align: center;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.badge:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.badge.unlocked {
+  background: rgba(255, 255, 255, 0.3);
+  border-color: white;
+}
+
+.badge.locked {
+  opacity: 0.5;
+}
+
+.badge-icon {
+  font-size: 2.5em;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.badge-name {
+  font-size: 0.9em;
+}
+
+.rewards-history {
+  padding: 40px 20px;
+  background: rgba(255, 255, 255, 0.9);
+  margin: 30px 20px;
+  border-radius: 15px;
+}
+
+@media (max-width: 768px) {
+  .loyalty-dashboard {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+<body>
+  <header class="navbar">
+    <div class="logo">SwiftBuy</div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="rewards.html">Rewards</a></li>
+        <li><a href="cart.html">Cart</a></li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="loyalty-section">
+    <h2 style="text-align: center; margin-bottom: 30px;">🎮 Earn Rewards & Unlock Badges</h2>
+    <div class="loyalty-dashboard">
+      <div class="points-display">
+        <div class="points-circle">
+          <span class="points-number" id="userPoints">0</span>
+          <span class="points-label">Points</span>
+        </div>
+        <div class="points-info">
+          <p>Earn points with every purchase!</p>
+          <div class="progress-bar">
+            <div class="progress-fill" id="pointsProgress" style="width: 0%"></div>
+          </div>
+          <p class="next-level">Next reward at 500 points</p>
+        </div>
+      </div>
+      <div class="badges-container">
+        <h3>Your Badges</h3>
+        <div class="badges-grid">
+          <div class="badge unlocked">
+            <span class="badge-icon">🛒</span>
+            <span class="badge-name">First Purchase</span>
+          </div>
+          <div class="badge locked">
+            <span class="badge-icon">⭐</span>
+            <span class="badge-name">VIP Member</span>
+          </div>
+          <div class="badge locked">
+            <span class="badge-icon">🎁</span>
+            <span class="badge-name">Gift Master</span>
+          </div>
+          <div class="badge locked">
+            <span class="badge-icon">🔥</span>
+            <span class="badge-name">Hot Streak</span>
+          </div>
+          <div class="badge locked">
+            <span class="badge-icon">💎</span>
+            <span class="badge-name">Diamond</span>
+          </div>
+          <div class="badge locked">
+            <span class="badge-icon">👑</span>
+            <span class="badge-name">Royalty</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="rewards-history">
+    <h2>Rewards History</h2>
+    <p style="text-align: center; color: #666; padding: 40px;">Your reward history will appear here as you earn points!</p>
+  </section>
+
+  <footer>
+    <p>© 2024 SwiftBuy. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function initLoyalty() {
+      let points = parseInt(localStorage.getItem('loyaltyPoints')) || 0;
+      document.getElementById('userPoints').textContent = points;
+      const progress = (points % 500) / 500 * 100;
+      document.getElementById('pointsProgress').style.width = progress + '%';
+    }
+    document.addEventListener('DOMContentLoaded', initLoyalty);
+  </script>
+</body>
+</html>
+

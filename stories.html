@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwiftBuy - Product Stories</title>
+  <link rel="stylesheet" href="shared-styles.css">
+</head>
+<style>
+.product-stories {
+  padding: 40px 20px;
+  background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(238, 90, 111, 0.1) 100%);
+  margin: 30px 20px;
+  border-radius: 15px;
+}
+
+.stories-carousel {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.story-card {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.story-card:nth-child(1) { animation-delay: 0.1s; }
+.story-card:nth-child(2) { animation-delay: 0.2s; }
+.story-card:nth-child(3) { animation-delay: 0.3s; }
+
+.story-card:hover {
+  transform: translateY(-5px);
+}
+
+.story-image {
+  font-size: 4em;
+  margin-bottom: 20px;
+}
+
+.story-btn {
+  margin-top: 15px;
+  padding: 10px 25px;
+  background: #0074D9;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.photo-reviews {
+  padding: 40px 20px;
+  background: rgba(255, 255, 255, 0.9);
+  margin: 30px 20px;
+  border-radius: 15px;
+}
+
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.review-card {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.review-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.review-image {
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4em;
+}
+
+.review-content {
+  padding: 20px;
+}
+
+.review-product {
+  color: #0074D9;
+  font-weight: bold;
+  margin-top: 10px;
+}
+</style>
+<body>
+  <header class="navbar">
+    <div class="logo">SwiftBuy</div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="stories.html">Stories</a></li>
+        <li><a href="cart.html">Cart</a></li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="product-stories">
+    <h2 style="text-align: center; margin-bottom: 10px;">📖 Behind The Scenes</h2>
+    <p class="subtitle" style="text-align: center; color: #666; margin-bottom: 30px;">Discover the stories behind our products</p>
+    <div class="stories-carousel">
+      <div class="story-card">
+        <div class="story-image">🏭</div>
+        <h3>Sustainable Manufacturing</h3>
+        <p>Learn how we're reducing our carbon footprint with eco-friendly packaging and sustainable practices. Every product is crafted with care for the environment.</p>
+        <button class="story-btn" onclick="alert('Read more about our sustainable practices!')">Read More</button>
+      </div>
+      <div class="story-card">
+        <div class="story-image">🎨</div>
+        <h3>Design Innovation</h3>
+        <p>Our products are designed with user experience in mind. Discover the thought process behind our designs and how we prioritize functionality and aesthetics.</p>
+        <button class="story-btn" onclick="alert('Read more about our design philosophy!')">Read More</button>
+      </div>
+      <div class="story-card">
+        <div class="story-image">🤝</div>
+        <h3>Community Impact</h3>
+        <p>Every purchase helps support local communities. See how your shopping makes a difference in people's lives and contributes to positive change.</p>
+        <button class="story-btn" onclick="alert('Read more about our community impact!')">Read More</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="photo-reviews">
+    <h2 style="text-align: center; margin-bottom: 10px;">📸 Real Customer Photos</h2>
+    <p class="subtitle" style="text-align: center; color: #666; margin-bottom: 30px;">See how our products look in real life</p>
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="review-image">📷</div>
+        <div class="review-content">
+          <p class="review-text">"Love my new laptop! Perfect for work and gaming. The build quality is amazing!"</p>
+          <p class="review-author" style="font-weight: bold; margin-top: 15px;">- Ahmed, Lahore</p>
+          <div class="review-product">Lenovo IdeaPad 3</div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-image">📷</div>
+        <div class="review-content">
+          <p class="review-text">"Amazing quality headphones! Best purchase ever. The sound is crystal clear."</p>
+          <p class="review-author" style="font-weight: bold; margin-top: 15px;">- Fatima, Islamabad</p>
+          <div class="review-product">Hyper X Cloud 2</div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-image">📷</div>
+        <div class="review-content">
+          <p class="review-text">"Great value for money. Highly recommend! Fast heating and durable."</p>
+          <p class="review-author" style="font-weight: bold; margin-top: 15px;">- Hassan, Karachi</p>
+          <div class="review-product">Electric Kettle</div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-image">📷</div>
+        <div class="review-content">
+          <p class="review-text">"Perfect fit and comfortable. Great quality fabric and excellent customer service!"</p>
+          <p class="review-author" style="font-weight: bold; margin-top: 15px;">- Sara, Lahore</p>
+          <div class="review-product">Mens Track Suit</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2024 SwiftBuy. All rights reserved.</p>
+  </footer>
+</body>
+</html>
+

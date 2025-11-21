@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwiftBuy - Your Shopping Partner</title>
+  <link rel="stylesheet" href="shared-styles.css">
+  <link rel="stylesheet" href="notifications.css">
+</head>
+
+
+ <!-- Style of HomePage -->
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%);
+  min-height: 100vh;
+  overflow-x: hidden;
+  animation: gradientShift 18s ease-in-out infinite alternate;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 50% 100%; }
+  100% { background-position: 100% 50%; }
+}
+
+h2 {
+  text-align: center;
+  margin: 20px 0;
+  color: #333;
+}
+
+[data-animate="scroll"] {
+  opacity: 0;
+  transform: translateY(35px) scale(0.98);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+[data-animate="scroll"].visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Hero Section */
+.hero {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 60px 8%;
+  gap: 40px;
+  position: relative;
+  margin-top: 90px;
+  background: rgba(255, 255, 255, 0.35);
+  border-radius: 25px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+.hero::before,
+.hero::after {
+  content: '';
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 116, 217, 0.2), transparent);
+  z-index: 0;
+  animation: float 12s ease-in-out infinite;
+}
+
+.hero::before { top: -120px; right: -80px; }
+.hero::after { bottom: -150px; left: -120px; animation-delay: 3s; }
+
+.hero-content {
+  flex: 1 1 380px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-content h1 {
+  font-size: clamp(2rem, 4vw, 3.5rem);
+  color: #0c1d4a;
+  margin-bottom: 15px;
+  line-height: 1.2;
+}
+
+.hero-tagline {
+  font-size: 1.1rem;
+  color: #4a4a4a;
+  max-width: 520px;
+  margin-bottom: 25px;
+}
+
+.hero-cta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.hero-cta button {
+  border: none;
+  border-radius: 999px;
+  padding: 14px 26px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.hero-cta button.primary {
+  background: linear-gradient(135deg, #0074D9, #00b4d8);
+  color: white;
+  box-shadow: 0 12px 30px rgba(0, 116, 217, 0.35);
+}
+
+.hero-cta button.secondary {
+  background: rgba(255, 255, 255, 0.4);
+  color: #0c1d4a;
+  border: 1px solid rgba(12, 29, 74, 0.2);
+}
+
+.hero-cta button:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
+}
+
+.hero-metrics {
+  display: flex;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+.metric-card {
+  background: white;
+  padding: 16px 22px;
+  border-radius: 16px;
+  min-width: 150px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  animation: pulseGlow 2.8s ease-in-out infinite;
+}
+
+.metric-card strong {
+  display: block;
+  font-size: 1.7rem;
+  color: #0074D9;
+}
+
+.hero-showcase {
+  flex: 1 1 360px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 18px;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-card {
+  position: relative;
+  border-radius: 22px;
+  overflow: hidden;
+  min-height: 220px;
+  color: white;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background-size: cover;
+  background-position: center;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.25);
+  opacity: 0.65;
+  transform: translateY(25px) scale(0.95);
+  transition: opacity 0.5s ease, transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.hero-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(1, 5, 24, 0.8) 100%);
+}
+
+.hero-card span {
+  position: relative;
+  z-index: 1;
+}
+
+.hero-card strong {
+  font-size: 1.4rem;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-card.active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  box-shadow: 0 25px 55px rgba(0, 0, 0, 0.3);
+}
+
+.hero-card.active::before {
+  content: 'Trending';
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: rgba(255, 255, 255, 0.85);
+  color: #0c1d4a;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  z-index: 2;
+}
+
+.scroll-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.95rem;
+  color: #0c1d4a;
+  opacity: 0.75;
+  animation: float 3.5s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes pulseGlow {
+  0%, 100% { box-shadow: 0 15px 35px rgba(0, 116, 217, 0.15); }
+  50% { box-shadow: 0 20px 40px rgba(0, 116, 217, 0.25); }
+}
+
+.floating-pill {
+  position: absolute;
+  width: 120px;
+  height: 120px;
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(4px);
+  animation: float 10s ease-in-out infinite;
+  z-index: 0;
+}
+
+.floating-pill.pill-1 { top: 50px; left: 5%; }
+.floating-pill.pill-2 { bottom: 60px; right: 8%; animation-delay: 2s; }
+
+@keyframes shimmer {
+  0% { background-position: -200px 0; }
+  100% { background-position: 200px 0; }
+}
+
+/* Navigation Bar - Using shared styles */
+
+/* Search Bar with Predictive Search */
+.search-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+  position: relative;
+  width: 100%;
+}
+
+.search-bar {
+  display: flex;
+  justify-content: center;
+  width: 60%;
+  position: relative;
+}
+
+.search-bar input {
+  padding: 12px 15px;
+  width: 100%;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  font-size: 1em;
+  box-sizing: border-box;
+}
+
+.search-bar input:focus {
+  outline: none;
+  border-color: #0074D9;
+}
+
+.search-bar button {
+  padding: 12px 25px;
+  background-color: #0074D9;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1em;
+  margin-left: 10px;
+}
+
+.search-bar button:hover {
+  background-color: #005BB5;
+}
+
+/* Predictive Search Dropdown */
+.search-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  display: none;
+  margin-top: 5px;
+}
+
+.search-suggestions.show {
+  display: block;
+}
+
+.suggestion-item {
+  padding: 12px 15px;
+  cursor: pointer;
+  border-bottom: 1px solid #f0f0f0;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.suggestion-item:hover {
+  background-color: #f5f5f5;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-type {
+  font-size: 0.8em;
+  color: #666;
+  margin-left: auto;
+  padding: 2px 8px;
+  background-color: #e8e8e8;
+  border-radius: 3px;
+}
+
+.suggestion-item:hover .suggestion-type {
+  background-color: #0074D9;
+  color: white;
+}
+
+/* Special Offers */
+.special-offers {
+  background-color: #FFDC00;
+  padding: 20px;
+  text-align: center;
+  animation: fadeIn 0.5s ease-out;
+}
+
+.offer-banner {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+/* Featured Products */
+.featured-products {
+  padding: 30px 20px;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(5px);
+  margin: 20px;
+  border-radius: 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  animation: fadeIn 0.6s ease-out;
+}
+
+/* AI Recommendations Section */
+.ai-recommendations {
+  padding: 30px 20px;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  backdrop-filter: blur(10px);
+  margin: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  animation: fadeIn 0.6s ease-out;
+}
+
+.ai-recommendations h2 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.ai-recommendations .subtitle {
+  text-align: center;
+  color: #666;
+  font-style: italic;
+  margin-bottom: 20px;
+}
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 20px;
+  padding: 10px;
+}
+
+.product-card {
+  text-align: center;
+  border: 1px solid rgba(0, 116, 217, 0.1);
+  border-radius: 10px;
+  padding: 15px;
+  transition: all 0.3s ease;
+  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  animation: fadeIn 0.5s ease-out;
+}
+
+.product-card::before {
+  content: '✨ Recommended for You';
+  position: absolute;
+  top: 10px;
+  right: -100px;
+  background: #0074D9;
+  color: white;
+  padding: 5px 15px;
+  font-size: 0.7em;
+  border-radius: 3px;
+  transition: right 0.3s ease;
+  z-index: 1;
+}
+
+.product-card.recommended::before {
+  right: 10px;
+}
+
+.product-card img {
+  width: 100%;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  transition: transform 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(0, 116, 217, 0.2);
+  border-color: rgba(0, 116, 217, 0.3);
+}
+
+.product-card:hover img {
+  transform: scale(1.05);
+}
+
+.product-card h3 {
+  margin: 10px 0 5px 0;
+  font-size: 1em;
+  color: #333;
+}
+
+.product-card .price {
+  color: #0074D9;
+  font-weight: bold;
+  font-size: 1.1em;
+  margin: 5px 0;
+}
+
+.product-card button {
+  margin-top: 10px;
+  padding: 8px 15px;
+  background-color: #0074D9;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.2s;
+}
+
+.product-card button:hover {
+  background-color: #005BB5;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+}
+
+.loading::after {
+  content: '...';
+  animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+  0%, 20% { content: '.'; }
+  40% { content: '..'; }
+  60%, 100% { content: '...'; }
+}
+
+footer {
+  background-color: #0074D9;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+}
+
+/* Flash Sale Countdown */
+.flash-sale {
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
+  margin: 30px 20px;
+  border-radius: 15px;
+  color: white;
+  box-shadow: 0 8px 30px rgba(255, 107, 107, 0.3);
+}
+
+.flash-sale-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.flash-sale h2 {
+  color: white;
+  font-size: 2.5em;
+  margin-bottom: 20px;
+}
+
+.countdown-timer {
+  font-size: 3em;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 20px;
+  border-radius: 10px;
+  display: inline-block;
+  animation: pulse 2s infinite;
+  transition: all 0.3s ease;
+}
+
+.countdown-timer:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+/* Live Activity Feed */
+.live-activity {
+  padding: 40px 20px;
+  background: rgba(255, 255, 255, 0.9);
+  margin: 30px 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  animation: fadeIn 0.6s ease-out;
+}
+
+.activity-feed {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  margin: 10px 0;
+  background: #f8f9fa;
+  border-radius: 10px;
+  border-left: 4px solid #0074D9;
+  animation: slideInRight 0.5s ease-out;
+  transition: all 0.3s ease;
+}
+
+.activity-item:hover {
+  background: #e9ecef;
+  transform: translateX(5px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.activity-icon {
+  font-size: 2em;
+  margin-right: 15px;
+}
+
+.activity-text {
+  flex: 1;
+  color: #333;
+}
+
+.activity-time {
+  color: #666;
+  font-size: 0.9em;
+}
+
+/* Quick Links to Features */
+.quick-links {
+  padding: 40px 20px;
+  background: rgba(255, 255, 255, 0.9);
+  margin: 30px 20px;
+  border-radius: 15px;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 25px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-link {
+  text-decoration: none;
+  color: inherit;
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.feature-link:nth-child(1) { animation-delay: 0.1s; }
+.feature-link:nth-child(2) { animation-delay: 0.2s; }
+.feature-link:nth-child(3) { animation-delay: 0.3s; }
+.feature-link:nth-child(4) { animation-delay: 0.4s; }
+.feature-link:nth-child(5) { animation-delay: 0.5s; }
+.feature-link:nth-child(6) { animation-delay: 0.6s; }
+
+.feature-link:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 116, 217, 0.2);
+  border-color: #0074D9;
+}
+
+.feature-icon {
+  font-size: 3.5em;
+  margin-bottom: 15px;
+}
+
+.feature-link h3 {
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.feature-link p {
+  color: #666;
+  font-size: 0.9em;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .links-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+}
+</style>
+
+<body>
+  <!-- Navigation Menu -->
+  <header class="navbar">
+    <div class="logo">SwiftBuy</div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="#">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="brands.html">Brands</a></li>
+        <li><a href="videos.html">Videos</a></li>
+        <li><a href="cart.html">Cart</a></li>
+        <li><a href="returns.html">Returns</a></li>
+        <li>
+          <div class="notification-bell" id="notificationBell" onclick="toggleNotificationCenter()">
+            🔔
+            <span id="notificationBadge"></span>
+          </div>
+        </li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Predictive Search Bar -->
+  <div class="search-container">
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search for products... (AI-powered)">
+      <button id="searchButton">Search</button>
+      <div class="search-suggestions" id="searchSuggestions"></div>
+    </div>
+  </div>
+
+  <!-- Special Offers Section -->
+  <section class="special-offers">
+    <h2>Today's Special Offers</h2>
+    <div class="offer-banner">Up to 50% Off on Electronics!</div>
+  </section>
+
+  <!-- AI-Powered Recommendations Section -->
+  <section class="ai-recommendations">
+    <h2>🤖 Recommended For You</h2>
+    <p class="subtitle">Personalized recommendations based on your browsing behavior</p>
+    <div class="product-grid" id="aiRecommendations">
+      <div class="loading">Loading personalized recommendations</div>
+    </div>
+  </section>
+
+  <!-- Featured Products Section -->
+  <section class="featured-products">
+    <h2>Trending Products</h2>
+    <div class="product-grid" id="trendingProducts">
+      <div class="loading">Loading trending products</div>
+    </div>
+  </section>
+
+  <!-- Flash Sale Countdown -->
+  <section class="flash-sale">
+    <div class="flash-sale-header">
+      <h2>⚡ Flash Sale - Limited Time!</h2>
+      <div class="countdown-timer" id="countdownTimer">
+        <span id="hours">00</span>:<span id="minutes">00</span>:<span id="seconds">00</span>
+      </div>
+    </div>
+    <div class="product-grid" id="flashSaleProducts">
+      <div class="loading">Loading flash sale products</div>
+    </div>
+  </section>
+
+  <!-- Live Activity Feed -->
+  <section class="live-activity">
+    <h2>🔥 Live Activity</h2>
+    <p class="subtitle">See what others are buying right now!</p>
+    <div class="activity-feed" id="activityFeed">
+      <div class="activity-item">
+        <span class="activity-icon">🛒</span>
+        <span class="activity-text">Sarah from Karachi just purchased <strong>Lenovo IdeaPad 3</strong></span>
+        <span class="activity-time">2 mins ago</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Links to Other Features -->
+  <section class="quick-links">
+    <h2>Explore More Features</h2>
+    <div class="links-grid">
+      <a href="rewards.html" class="feature-link">
+        <div class="feature-icon">🎮</div>
+        <h3>Rewards & Badges</h3>
+        <p>Earn points and unlock achievements</p>
+      </a>
+      <a href="discover.html" class="feature-link">
+        <div class="feature-icon">🎯</div>
+        <h3>Product Discovery</h3>
+        <p>Take a quiz to find perfect products</p>
+      </a>
+      <a href="bundles.html" class="feature-link">
+        <div class="feature-icon">🎁</div>
+        <h3>Product Bundles</h3>
+        <p>Save more with curated sets</p>
+      </a>
+      <a href="social.html" class="feature-link">
+        <div class="feature-icon">👥</div>
+        <h3>Social Shopping</h3>
+        <p>Shop with friends & refer & earn</p>
+      </a>
+      <a href="stories.html" class="feature-link">
+        <div class="feature-icon">📖</div>
+        <h3>Product Stories</h3>
+        <p>Behind the scenes & customer reviews</p>
+      </a>
+      <a href="sustainability.html" class="feature-link">
+        <div class="feature-icon">🌱</div>
+        <h3>Your Impact</h3>
+        <p>See your environmental impact</p>
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2024 SwiftBuy. All rights reserved.</p>
+  </footer>
+
+  
+  <!-- AI Recommendations Script -->
+  <script src="ai-recommendations.js"></script>
+  <script src="notifications.js"></script>
+  
+  <script>
+    // Wait for AI system to load
+    document.addEventListener('DOMContentLoaded', function() {
+      // Initialize AI-powered homepage
+      initializeAIHomepage();
+      initializePredictiveSearch();
+    });
+
+    // Initialize AI Homepage with Dynamic Recommendations
+    function initializeAIHomepage() {
+      if (!window.AIRecommendations) {
+        console.error('AI Recommendations system not loaded');
+        return;
+      }
+
+      const { engine, tracker } = window.AIRecommendations;
+
+      // Load AI Recommendations
+      loadRecommendations();
+      
+      // Load Trending Products
+      loadTrendingProducts();
+
+      // Track page view
+      tracker.trackView('homepage');
+    }
+
+    // Load Personalized Recommendations
+    function loadRecommendations() {
+      const container = document.getElementById('aiRecommendations');
+      if (!container) return;
+
+      const recommendations = window.AIRecommendations.engine.getRecommendations(8);
+      
+      if (recommendations.length === 0) {
+        container.innerHTML = '<p style="text-align: center; padding: 40px; color: #666;">Start browsing to get personalized recommendations!</p>';
+        return;
+      }
+
+      container.innerHTML = recommendations.map(product => `
+        <div class="product-card recommended" onclick="handleProductClick('${product.name}')">
+          <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/200x200?text=Product'">
+          <h3>${product.name}</h3>
+          <p class="price">RS: ${product.price.toLocaleString()}</p>
+          <div style="color: #FFD700; margin: 5px 0;">${'⭐'.repeat(product.rating)}${'☆'.repeat(5 - product.rating)}</div>
+          <button onclick="event.stopPropagation(); addToCart('${product.name}', ${product.price})">Add to Cart</button>
+        </div>
+      `).join('');
+    }
+
+    // Load Trending Products
+    function loadTrendingProducts() {
+      const container = document.getElementById('trendingProducts');
+      if (!container) return;
+
+      const trending = window.AIRecommendations.engine.getTrendingProducts(4);
+      
+      container.innerHTML = trending.map(product => `
+        <div class="product-card" onclick="handleProductClick('${product.name}')">
+          <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/200x200?text=Product'">
+          <h3>${product.name}</h3>
+          <p class="price">RS: ${product.price.toLocaleString()}</p>
+          <div style="color: #FFD700; margin: 5px 0;">${'⭐'.repeat(product.rating)}${'☆'.repeat(5 - product.rating)}</div>
+          <button onclick="event.stopPropagation(); addToCart('${product.name}', ${product.price})">Add to Cart</button>
+        </div>
+      `).join('');
+    }
+
+    // Handle Product Click (Track behavior)
+    function handleProductClick(productName) {
+      if (window.AIRecommendations) {
+        window.AIRecommendations.tracker.trackClick(productName);
+        
+        // Track recently viewed
+        let viewed = JSON.parse(localStorage.getItem('recentlyViewed')) || [];
+        if (!viewed.includes(productName)) {
+          viewed.unshift(productName);
+          viewed = viewed.slice(0, 10); // Keep last 10
+          localStorage.setItem('recentlyViewed', JSON.stringify(viewed));
+        }
+        
+        window.location.href = `products.html?product=${encodeURIComponent(productName)}`;
+      }
+    }
+
+    // Add to Cart Function (if not already defined)
+    function addToCart(productName, productPrice) {
+      if (window.AIRecommendations) {
+        window.AIRecommendations.tracker.trackClick(productName);
+      }
+      
+      // Use existing cart function if available
+      if (typeof window.addToCart === 'function') {
+        window.addToCart(productName, productPrice);
+      } else {
+        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const existingProductIndex = cart.findIndex((item) => item.name === productName);
+
+        if (existingProductIndex !== -1) {
+          cart[existingProductIndex].quantity += 1;
+        } else {
+          cart.push({ name: productName, price: productPrice, quantity: 1 });
+        }
+
+        localStorage.setItem("cart", JSON.stringify(cart));
+        alert(`${productName} has been added to the cart!`);
+      }
+    }
+
+    // Initialize Predictive Search
+    function initializePredictiveSearch() {
+      const searchInput = document.getElementById('searchInput');
+      const searchButton = document.getElementById('searchButton');
+      const suggestionsContainer = document.getElementById('searchSuggestions');
+
+      if (!searchInput || !searchButton || !suggestionsContainer) return;
+
+      let searchTimeout;
+
+      // Real-time search suggestions
+      searchInput.addEventListener('input', function() {
+        const query = this.value.trim();
+        
+        clearTimeout(searchTimeout);
+        
+        if (query.length < 2) {
+          suggestionsContainer.classList.remove('show');
+          return;
+        }
+
+        searchTimeout = setTimeout(() => {
+          if (window.AIRecommendations) {
+            const suggestions = window.AIRecommendations.searchEngine.getSuggestions(query, 5);
+            displaySuggestions(suggestions);
+          }
+        }, 200);
+      });
+
+      // Show popular searches on focus
+      searchInput.addEventListener('focus', function() {
+        if (this.value.trim().length < 2 && window.AIRecommendations) {
+          const popular = window.AIRecommendations.searchEngine.getPopularSearches(5);
+          if (popular.length > 0) {
+            const suggestions = popular.map(query => ({
+              text: query,
+              type: 'search',
+              category: 'Popular Search'
+            }));
+            displaySuggestions(suggestions);
+          }
+        }
+      });
+
+      // Hide suggestions when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !suggestionsContainer.contains(e.target)) {
+          suggestionsContainer.classList.remove('show');
+        }
+      });
+
+      // Search function
+      function performSearch(query) {
+        if (!query.trim()) return;
+        
+        if (window.AIRecommendations) {
+          window.AIRecommendations.tracker.trackSearch(query);
+        }
+        
+        window.location.href = `products.html?search=${encodeURIComponent(query)}`;
+      }
+
+      searchButton.addEventListener('click', function() {
+        performSearch(searchInput.value);
+      });
+
+      searchInput.addEventListener('keypress', function(event) {
+        if (event.key === 'Enter') {
+          performSearch(this.value);
+        }
+      });
+
+      // Display suggestions
+      function displaySuggestions(suggestions) {
+        if (suggestions.length === 0) {
+          suggestionsContainer.classList.remove('show');
+          return;
+        }
+
+        suggestionsContainer.innerHTML = suggestions.map(suggestion => `
+          <div class="suggestion-item" onclick="selectSuggestion('${suggestion.text.replace(/'/g, "\\'")}')">
+            <span>${suggestion.text}</span>
+            <span class="suggestion-type">${suggestion.category || suggestion.type}</span>
+          </div>
+        `).join('');
+
+        suggestionsContainer.classList.add('show');
+      }
+
+      // Select suggestion
+      window.selectSuggestion = function(text) {
+        searchInput.value = text;
+        suggestionsContainer.classList.remove('show');
+        performSearch(text);
+      };
+    }
+
+    // Flash Sale Countdown
+    function initFlashSale() {
+      const endTime = new Date().getTime() + (24 * 60 * 60 * 1000); // 24 hours from now
+      
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = endTime - now;
+        
+        if (distance < 0) {
+          document.getElementById('countdownTimer').innerHTML = 'EXPIRED';
+          return;
+        }
+        
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        
+        document.getElementById('hours').textContent = String(hours).padStart(2, '0');
+        document.getElementById('minutes').textContent = String(minutes).padStart(2, '0');
+        document.getElementById('seconds').textContent = String(seconds).padStart(2, '0');
+      }
+      
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+      
+      // Load flash sale products
+      if (window.AIRecommendations) {
+        const flashProducts = window.AIRecommendations.engine.getTrendingProducts(4);
+        const container = document.getElementById('flashSaleProducts');
+        if (container) {
+          container.innerHTML = flashProducts.map(product => `
+            <div class="product-card" onclick="handleProductClick('${product.name}')">
+              <img src="${product.image}" alt="${product.name}">
+              <h3>${product.name}</h3>
+              <p class="price">RS: ${(product.price * 0.8).toLocaleString()}</p>
+              <p style="text-decoration: line-through; color: #999;">RS: ${product.price.toLocaleString()}</p>
+              <button onclick="event.stopPropagation(); addToCart('${product.name}', ${product.price * 0.8})">Add to Cart</button>
+            </div>
+          `).join('');
+        }
+      }
+    }
+
+    // Live Activity Feed
+    function initLiveActivity() {
+      const activities = [
+        { name: 'Sarah', location: 'Karachi', product: 'Lenovo IdeaPad 3', time: '2 mins ago' },
+        { name: 'Ahmed', location: 'Lahore', product: 'Hyper X Cloud 2', time: '5 mins ago' },
+        { name: 'Fatima', location: 'Islamabad', product: 'Mens Track Suit', time: '8 mins ago' },
+        { name: 'Hassan', location: 'Karachi', product: 'Electric Kettle', time: '12 mins ago' },
+        { name: 'Ali', location: 'Lahore', product: 'Formal Shirt', time: '15 mins ago' }
+      ];
+      
+      const container = document.getElementById('activityFeed');
+      if (!container) return;
+      
+      function addActivity() {
+        const activity = activities[Math.floor(Math.random() * activities.length)];
+        const item = document.createElement('div');
+        item.className = 'activity-item';
+        item.innerHTML = `
+          <span class="activity-icon">🛒</span>
+          <span class="activity-text"><strong>${activity.name}</strong> from ${activity.location} just purchased <strong>${activity.product}</strong></span>
+          <span class="activity-time">${activity.time}</span>
+        `;
+        container.insertBefore(item, container.firstChild);
+        if (container.children.length > 5) {
+          container.removeChild(container.lastChild);
+        }
+      }
+      
+      addActivity();
+      setInterval(addActivity, 8000);
+    }
+
+    // Initialize all features
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(() => {
+        initFlashSale();
+        initLiveActivity();
+      }, 1000);
+    });
+  </script>
+
+</body>
+</html>

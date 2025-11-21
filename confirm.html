@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwiftBuy - Order Confirmation</title>
+  <link rel="stylesheet" href="shared-styles.css">
+</head>
+
+<!-- Style of HomePage -->
+<style>
+/* Using shared styles for body and navbar */
+
+/* Order Confirmation Section */
+.order-confirmation {
+  padding: 40px 20px;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto;
+  min-height: 60vh;
+}
+
+.order-confirmation h2 {
+  color: #0074D9;
+  font-size: 3em;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  animation: bounce 1s ease-out;
+}
+
+.thank-you-message {
+  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+  padding: 40px;
+  margin-bottom: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(0, 116, 217, 0.1);
+  animation: scaleIn 0.7s ease-out;
+}
+
+.thank-you-message p {
+  font-size: 1.2em;
+  color: #333;
+  line-height: 1.8;
+  margin: 10px 0;
+}
+
+/* Continue Shopping Button */
+.continue-shopping {
+  margin-top: 30px;
+}
+
+.btn {
+  background-color: #0074D9;
+  color: white;
+  padding: 15px 30px;
+  font-size: 1.2em;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 116, 217, 0.3);
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn:hover {
+  background-color: #005BB5;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 116, 217, 0.4);
+}
+
+/* Footer - using shared styles */
+</style>
+
+<body>
+  <!-- Navigation Bar (Optional) -->
+  <header class="navbar">
+    <div class="logo">SwiftBuy</div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="cart.html">Cart</a></li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Order Confirmation Section -->
+  <section class="order-confirmation">
+    <h2>Order Confirmed!</h2>
+
+  <!-- Thank You Message -->
+  <div class="thank-you-message">
+      <p style="font-size: 1.3em; font-weight: bold; color: #0074D9; margin-bottom: 15px;">Thank you for your purchase! 🎉</p>
+      <p>Your order has been successfully placed and is being processed.</p>
+      <p>You will receive a notification once it ships.</p>
+      <div id="packaging-info" style="margin-top: 20px; padding: 15px; background: rgba(0, 116, 217, 0.1); border-radius: 8px; display: none;">
+        <p style="font-weight: bold; margin-bottom: 10px;">📦 Packaging Details:</p>
+        <p id="packaging-details"></p>
+      </div>
+  </div>
+
+  <div class="continue-shopping">
+      <a href="products.html">
+        <button class="btn">Continue Shopping</button>
+      </a>         
+  </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2024 SwiftBuy. All rights reserved.</p>
+  </footer>
+  
+  <script src="ai-recommendations.js"></script>
+  <script>
+    // Track purchase when order is confirmed
+    document.addEventListener('DOMContentLoaded', function() {
+      // Display packaging information
+      const packagingData = localStorage.getItem('packaging');
+      if (packagingData) {
+        const pkg = JSON.parse(packagingData);
+        if (pkg.type && pkg.type !== 'standard') {
+          const packagingInfo = document.getElementById('packaging-info');
+          const packagingDetails = document.getElementById('packaging-details');
+          
+          const packagingNames = {
+            'eco': '🌱 Eco-Friendly Packaging',
+            'luxury': '✨ Luxury Packaging',
+            'gift': '🎁 Gift Wrapping'
+          };
+          
+          let details = packagingNames[pkg.type] || 'Custom Packaging';
+          if (pkg.message) {
+            details += '<br><strong>Gift Message:</strong> "' + pkg.message + '"';
+          }
+          
+          packagingDetails.innerHTML = details;
+          packagingInfo.style.display = 'block';
+        }
+      }
+      
+      setTimeout(function() {
+        if (window.AIRecommendations && window.AIRecommendations.tracker) {
+          const cart = JSON.parse(localStorage.getItem("cart")) || [];
+          cart.forEach(item => {
+            // Track purchase for each item based on quantity
+            for (let i = 0; i < item.quantity; i++) {
+              window.AIRecommendations.tracker.trackPurchase(item.name);
+            }
+          });
+          
+          // Clear cart and packaging after tracking purchase
+          localStorage.setItem("cart", JSON.stringify([]));
+          localStorage.removeItem("packaging");
+        }
+      }, 500);
+    });
+  </script>
+</body>
+</html>

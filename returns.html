@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwiftBuy - Returns & Refunds</title>
+  <link rel="stylesheet" href="notifications.css">
+</head>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%);
+  min-height: 100vh;
+}
+
+/* Navigation Bar */
+.navbar {
+  background-color: #0074D9;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .logo {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: white;
+  font-size: 1em;
+  transition: all 0.3s ease;
+  padding: 5px 10px;
+  border-radius: 3px;
+}
+
+.nav-links li a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.notification-bell {
+  position: relative;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3em;
+}
+
+.notification-bell:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: scale(1.1);
+}
+
+#notificationBadge {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  background: #ff4444;
+  color: white;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7em;
+  font-weight: bold;
+  border: 2px solid #0074D9;
+}
+
+/* Returns Container */
+.returns-container {
+  max-width: 1200px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+.returns-header {
+  text-align: center;
+  padding: 30px;
+  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 15px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.returns-header h1 {
+  font-size: 2.5em;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.returns-header p {
+  color: #666;
+  font-size: 1.1em;
+}
+
+/* Return Request Form */
+.return-form-container {
+  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  margin-bottom: 30px;
+}
+
+.form-section {
+  margin-bottom: 30px;
+}
+
+.form-section h2 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 1.5em;
+  border-bottom: 2px solid #0074D9;
+  padding-bottom: 10px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+  font-weight: bold;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 1em;
+  transition: all 0.3s ease;
+  box-sizing: border-box;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #0074D9;
+  box-shadow: 0 0 0 3px rgba(0, 116, 217, 0.1);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* File Upload Area */
+.upload-area {
+  border: 3px dashed #0074D9;
+  border-radius: 10px;
+  padding: 40px;
+  text-align: center;
+  background: #f8f9fa;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.upload-area:hover {
+  background: #e8f4f8;
+  border-color: #005BB5;
+}
+
+.upload-area.dragover {
+  background: #e3f2fd;
+  border-color: #005BB5;
+  transform: scale(1.02);
+}
+
+.upload-icon {
+  font-size: 4em;
+  margin-bottom: 15px;
+}
+
+.upload-text {
+  font-size: 1.2em;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.upload-hint {
+  color: #666;
+  font-size: 0.9em;
+}
+
+#fileInput {
+  display: none;
+}
+
+/* Preview Area */
+.preview-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.preview-item {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.preview-item img,
+.preview-item video {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.preview-item .remove-btn {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(255, 68, 68, 0.9);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 1.2em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.preview-item .remove-btn:hover {
+  background: #ff4444;
+  transform: scale(1.1);
+}
+
+/* AI Analysis Section */
+.ai-analysis {
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+  padding: 25px;
+  border-radius: 10px;
+  margin-top: 20px;
+  display: none;
+}
+
+.ai-analysis.active {
+  display: block;
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.ai-analysis-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.ai-icon {
+  font-size: 2em;
+}
+
+.ai-analysis h3 {
+  margin: 0;
+  color: #333;
+}
+
+.condition-indicator {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  background: white;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.condition-badge {
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9em;
+}
+
+.condition-badge.excellent {
+  background: #4caf50;
+  color: white;
+}
+
+.condition-badge.good {
+  background: #8bc34a;
+  color: white;
+}
+
+.condition-badge.fair {
+  background: #ff9800;
+  color: white;
+}
+
+.condition-badge.poor {
+  background: #f44336;
+  color: white;
+}
+
+.condition-details {
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.condition-details ul {
+  margin: 10px 0;
+  padding-left: 20px;
+}
+
+.condition-details li {
+  margin: 5px 0;
+  color: #666;
+}
+
+/* Approval Status */
+.approval-status {
+  padding: 20px;
+  border-radius: 10px;
+  margin-top: 20px;
+  text-align: center;
+  display: none;
+}
+
+.approval-status.active {
+  display: block;
+  animation: slideUp 0.5s ease;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.approval-status.approved {
+  background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+  color: white;
+}
+
+.approval-status.pending {
+  background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+  color: white;
+}
+
+.approval-status.rejected {
+  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+  color: white;
+}
+
+.approval-icon {
+  font-size: 4em;
+  margin-bottom: 15px;
+}
+
+.approval-message {
+  font-size: 1.3em;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.approval-details {
+  font-size: 1em;
+  opacity: 0.9;
+}
+
+/* Submit Button */
+.submit-btn {
+  width: 100%;
+  padding: 15px;
+  background: linear-gradient(135deg, #0074D9 0%, #005BB5 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.2em;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 116, 217, 0.3);
+}
+
+.submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 116, 217, 0.4);
+}
+
+.submit-btn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  display: none;
+  text-align: center;
+  padding: 20px;
+}
+
+.loading-spinner.active {
+  display: block;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #0074D9;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Footer */
+footer {
+  background-color: #0074D9;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  margin-top: 50px;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Return History */
+.no-returns {
+  text-align: center;
+  padding: 40px;
+  color: #999;
+}
+
+.return-history-item {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  border-left: 4px solid #0074D9;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.return-history-item.approved {
+  border-left-color: #4caf50;
+}
+
+.return-history-item.pending {
+  border-left-color: #ff9800;
+}
+
+.return-history-item.rejected {
+  border-left-color: #f44336;
+}
+
+.return-history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.return-history-title {
+  font-weight: bold;
+  color: #333;
+  font-size: 1.1em;
+}
+
+.return-status-badge {
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 0.85em;
+  font-weight: bold;
+}
+
+.return-status-badge.approved {
+  background: #4caf50;
+  color: white;
+}
+
+.return-status-badge.pending {
+  background: #ff9800;
+  color: white;
+}
+
+.return-status-badge.rejected {
+  background: #f44336;
+  color: white;
+}
+
+.return-history-details {
+  color: #666;
+  font-size: 0.9em;
+  margin: 5px 0;
+}
+
+.return-history-time {
+  color: #999;
+  font-size: 0.85em;
+  margin-top: 10px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .preview-container {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  }
+  
+  .returns-header h1 {
+    font-size: 2em;
+  }
+  
+  .return-history-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+}
+</style>
+
+<body>
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="logo">SwiftBuy</div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="brands.html">Brands</a></li>
+        <li><a href="videos.html">Videos</a></li>
+        <li><a href="cart.html">Cart</a></li>
+        <li>
+          <div class="notification-bell" id="notificationBell" onclick="toggleNotificationCenter()">
+            🔔
+            <span id="notificationBadge"></span>
+          </div>
+        </li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Returns Container -->
+  <div class="returns-container">
+    <div class="returns-header">
+      <h1>🔄 Smart Return & Refund</h1>
+      <p>Upload photos/videos of your product. Our AI will analyze the condition and auto-approve your refund!</p>
+    </div>
+
+    <!-- Return Request Form -->
+    <div class="return-form-container">
+      <form id="returnForm" onsubmit="handleReturnRequest(event)">
+        <!-- Order Information -->
+        <div class="form-section">
+          <h2>Order Information</h2>
+          <div class="form-group">
+            <label for="orderNumber">Order Number *</label>
+            <input type="text" id="orderNumber" required placeholder="Enter your order number">
+          </div>
+          <div class="form-group">
+            <label for="productName">Product Name *</label>
+            <input type="text" id="productName" required placeholder="Enter product name">
+          </div>
+          <div class="form-group">
+            <label for="returnReason">Reason for Return *</label>
+            <select id="returnReason" required>
+              <option value="">Select a reason</option>
+              <option value="defective">Defective/Damaged</option>
+              <option value="wrong">Wrong Item</option>
+              <option value="not-as-described">Not as Described</option>
+              <option value="changed-mind">Changed Mind</option>
+              <option value="size-issue">Size/Size Issue</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Photo/Video Upload -->
+        <div class="form-section">
+          <h2>📸 Upload Product Photos/Video</h2>
+          <p style="color: #666; margin-bottom: 15px;">Upload clear photos or video showing the product condition. AI will analyze automatically.</p>
+          
+          <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+            <div class="upload-icon">📷</div>
+            <div class="upload-text">Click to upload or drag & drop</div>
+            <div class="upload-hint">Supports: JPG, PNG, MP4, MOV (Max 10MB each)</div>
+            <input type="file" id="fileInput" multiple accept="image/*,video/*" onchange="handleFileSelect(event)">
+          </div>
+
+          <div class="preview-container" id="previewContainer"></div>
+        </div>
+
+        <!-- Additional Details -->
+        <div class="form-section">
+          <h2>Additional Details</h2>
+          <div class="form-group">
+            <label for="description">Description (Optional)</label>
+            <textarea id="description" placeholder="Provide any additional details about the return..."></textarea>
+          </div>
+        </div>
+
+        <!-- AI Analysis Results -->
+        <div class="ai-analysis" id="aiAnalysis">
+          <div class="ai-analysis-header">
+            <div class="ai-icon">🤖</div>
+            <h3>AI Condition Analysis</h3>
+          </div>
+          <div class="condition-indicator" id="conditionIndicator">
+            <div class="condition-badge" id="conditionBadge">Analyzing...</div>
+            <div id="conditionText">Processing your images...</div>
+          </div>
+          <div class="condition-details" id="conditionDetails"></div>
+        </div>
+
+        <!-- Approval Status -->
+        <div class="approval-status" id="approvalStatus">
+          <div class="approval-icon" id="approvalIcon">⏳</div>
+          <div class="approval-message" id="approvalMessage">Processing...</div>
+          <div class="approval-details" id="approvalDetails"></div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div class="loading-spinner" id="loadingSpinner">
+          <div class="spinner"></div>
+          <p style="margin-top: 15px; color: #666;">AI is analyzing your product condition...</p>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="submit-btn" id="submitBtn">
+          Submit Return Request
+        </button>
+      </form>
+    </div>
+
+    <!-- Return History -->
+    <div class="return-form-container">
+      <h2 style="color: #333; margin-bottom: 20px; font-size: 1.5em; border-bottom: 2px solid #0074D9; padding-bottom: 10px;">
+        📋 Your Return History
+      </h2>
+      <div id="returnHistory">
+        <div class="no-returns">
+          <div style="font-size: 3em; margin-bottom: 15px;">📦</div>
+          <p>No return requests yet</p>
+          <p style="color: #999; font-size: 0.9em;">Your return requests will appear here</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2024 SwiftBuy. All rights reserved.</p>
+  </footer>
+
+  <script src="notifications.js"></script>
+  <script src="ai-return-detection.js"></script>
+  <script>
+    // Load return history on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      loadReturnHistory();
+    });
+
+    function loadReturnHistory() {
+      const returns = JSON.parse(localStorage.getItem('swiftbuy_returns') || '[]');
+      const historyContainer = document.getElementById('returnHistory');
+      
+      if (returns.length === 0) {
+        historyContainer.innerHTML = `
+          <div class="no-returns">
+            <div style="font-size: 3em; margin-bottom: 15px;">📦</div>
+            <p>No return requests yet</p>
+            <p style="color: #999; font-size: 0.9em;">Your return requests will appear here</p>
+          </div>
+        `;
+        return;
+      }
+      
+      // Sort by timestamp (newest first)
+      returns.sort((a, b) => b.timestamp - a.timestamp);
+      
+      historyContainer.innerHTML = returns.map(returnReq => {
+        const date = new Date(returnReq.timestamp);
+        const statusClass = returnReq.status;
+        const condition = returnReq.condition || 'unknown';
+        
+        return `
+          <div class="return-history-item ${statusClass}">
+            <div class="return-history-header">
+              <div class="return-history-title">${returnReq.productName}</div>
+              <span class="return-status-badge ${statusClass}">${statusClass.toUpperCase()}</span>
+            </div>
+            <div class="return-history-details">
+              <strong>Order #:</strong> ${returnReq.orderNumber}
+            </div>
+            <div class="return-history-details">
+              <strong>Reason:</strong> ${returnReq.returnReason.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+            </div>
+            ${condition !== 'unknown' ? `
+              <div class="return-history-details">
+                <strong>AI Detected Condition:</strong> 
+                <span style="text-transform: capitalize; font-weight: bold; color: ${getConditionColor(condition)}">${condition}</span>
+              </div>
+            ` : ''}
+            ${returnReq.filesCount ? `
+              <div class="return-history-details">
+                <strong>Files Uploaded:</strong> ${returnReq.filesCount} ${returnReq.filesCount === 1 ? 'file' : 'files'}
+              </div>
+            ` : ''}
+            ${returnReq.decision ? `
+              <div class="return-history-details">
+                <strong>AI Decision:</strong> ${returnReq.decision.approved ? '✅ Auto-approved by AI' : '⏳ Requires manual review'}
+              </div>
+              ${returnReq.decision.reason ? `
+                <div class="return-history-details" style="font-style: italic; color: #666;">
+                  ${returnReq.decision.reason}
+                </div>
+              ` : ''}
+            ` : ''}
+            <div class="return-history-time">
+              Submitted: ${date.toLocaleString()}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function getConditionColor(condition) {
+      const colors = {
+        'excellent': '#4caf50',
+        'good': '#8bc34a',
+        'fair': '#ff9800',
+        'poor': '#f44336'
+      };
+      return colors[condition] || '#666';
+    }
+    let uploadedFiles = [];
+
+    // File upload handling
+    const uploadArea = document.getElementById('uploadArea');
+    const fileInput = document.getElementById('fileInput');
+    const previewContainer = document.getElementById('previewContainer');
+
+    // Drag and drop
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.classList.add('dragover');
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.classList.remove('dragover');
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.classList.remove('dragover');
+      const files = Array.from(e.dataTransfer.files);
+      handleFiles(files);
+    });
+
+    function handleFileSelect(event) {
+      const files = Array.from(event.target.files);
+      handleFiles(files);
+    }
+
+    function handleFiles(files) {
+      files.forEach(file => {
+        if (file.size > 10 * 1024 * 1024) {
+          alert(`File ${file.name} is too large. Maximum size is 10MB.`);
+          return;
+        }
+
+        uploadedFiles.push(file);
+        displayPreview(file);
+      });
+    }
+
+    function displayPreview(file) {
+      const previewItem = document.createElement('div');
+      previewItem.className = 'preview-item';
+      
+      const isVideo = file.type.startsWith('video/');
+      const mediaElement = isVideo 
+        ? document.createElement('video')
+        : document.createElement('img');
+      
+      mediaElement.src = URL.createObjectURL(file);
+      if (isVideo) {
+        mediaElement.controls = true;
+      }
+      
+      const removeBtn = document.createElement('button');
+      removeBtn.className = 'remove-btn';
+      removeBtn.innerHTML = '×';
+      removeBtn.onclick = () => {
+        uploadedFiles = uploadedFiles.filter(f => f !== file);
+        previewItem.remove();
+        URL.revokeObjectURL(mediaElement.src);
+      };
+      
+      previewItem.appendChild(mediaElement);
+      previewItem.appendChild(removeBtn);
+      previewContainer.appendChild(previewItem);
+    }
+
+    // Make uploadedFiles accessible globally
+    window.uploadedFiles = uploadedFiles;
+
+    // Handle return request
+    function handleReturnRequest(event) {
+      event.preventDefault();
+      
+      if (uploadedFiles.length === 0) {
+        alert('Please upload at least one photo or video of the product.');
+        return;
+      }
+
+      // Update global reference
+      window.uploadedFiles = uploadedFiles;
+
+      const submitBtn = document.getElementById('submitBtn');
+      const loadingSpinner = document.getElementById('loadingSpinner');
+      const aiAnalysis = document.getElementById('aiAnalysis');
+      
+      submitBtn.disabled = true;
+      loadingSpinner.classList.add('active');
+      aiAnalysis.classList.remove('active');
+      
+      // Simulate AI analysis
+      setTimeout(() => {
+        analyzeProductCondition(uploadedFiles);
+      }, 2000);
+    }
+
+    // This function will be called from ai-return-detection.js
+    function showAnalysisResults(condition, details, confidence) {
+      const loadingSpinner = document.getElementById('loadingSpinner');
+      const aiAnalysis = document.getElementById('aiAnalysis');
+      const conditionBadge = document.getElementById('conditionBadge');
+      const conditionText = document.getElementById('conditionText');
+      const conditionDetails = document.getElementById('conditionDetails');
+      
+      loadingSpinner.classList.remove('active');
+      aiAnalysis.classList.add('active');
+      
+      // Set condition badge
+      conditionBadge.textContent = condition;
+      conditionBadge.className = `condition-badge ${condition.toLowerCase()}`;
+      
+      // Set condition text
+      conditionText.textContent = `Confidence: ${confidence}%`;
+      
+      // Set details
+      conditionDetails.innerHTML = `
+        <h4>Analysis Details:</h4>
+        <ul>
+          ${details.map(detail => `<li>${detail}</li>`).join('')}
+        </ul>
+      `;
+      
+      // Auto-approve based on condition
+      setTimeout(() => {
+        autoApproveReturn(condition, confidence);
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
+

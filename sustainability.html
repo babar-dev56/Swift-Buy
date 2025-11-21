@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwiftBuy - Your Impact</title>
+  <link rel="stylesheet" href="shared-styles.css">
+</head>
+<style>
+.sustainability {
+  padding: 40px 20px;
+  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  margin: 30px 20px;
+  border-radius: 15px;
+  color: white;
+}
+
+.impact-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.stat-card {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 30px;
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  animation: scaleIn 0.6s ease-out;
+}
+
+.stat-card:nth-child(1) { animation-delay: 0.1s; }
+.stat-card:nth-child(2) { animation-delay: 0.2s; }
+.stat-card:nth-child(3) { animation-delay: 0.3s; }
+
+.stat-card:hover {
+  transform: scale(1.05);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.stat-icon {
+  font-size: 3em;
+  margin-bottom: 15px;
+}
+
+.stat-number {
+  font-size: 3em;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.stat-label {
+  font-size: 1.1em;
+}
+
+.impact-info {
+  padding: 40px 20px;
+  background: rgba(255, 255, 255, 0.9);
+  margin: 30px 20px;
+  border-radius: 15px;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.impact-info h3 {
+  color: #11998e;
+  margin-bottom: 20px;
+}
+</style>
+<body>
+  <header class="navbar">
+    <div class="logo">SwiftBuy</div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="sustainability.html">Impact</a></li>
+        <li><a href="cart.html">Cart</a></li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="sustainability">
+    <h2 style="text-align: center; margin-bottom: 10px;">🌱 Your Impact</h2>
+    <p class="subtitle" style="text-align: center; margin-bottom: 40px; opacity: 0.9;">See the positive impact of your purchases</p>
+    <div class="impact-stats">
+      <div class="stat-card">
+        <div class="stat-icon">🌳</div>
+        <div class="stat-number" id="treesSaved">0</div>
+        <div class="stat-label">Trees Saved</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">💧</div>
+        <div class="stat-number" id="waterSaved">0</div>
+        <div class="stat-label">Liters of Water Saved</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">♻️</div>
+        <div class="stat-number" id="co2Reduced">0</div>
+        <div class="stat-label">kg CO2 Reduced</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="impact-info">
+    <h3>How We Calculate Your Impact</h3>
+    <p>Every purchase you make contributes to our sustainability goals:</p>
+    <ul style="line-height: 2;">
+      <li><strong>Eco-Friendly Packaging:</strong> When you choose eco-friendly packaging, you save trees and reduce waste.</li>
+      <li><strong>Sustainable Products:</strong> Our products are sourced from environmentally responsible suppliers.</li>
+      <li><strong>Carbon Offset:</strong> We offset carbon emissions from shipping through reforestation programs.</li>
+      <li><strong>Water Conservation:</strong> Our manufacturing processes use water-efficient technologies.</li>
+    </ul>
+    <p style="margin-top: 20px; color: #11998e; font-weight: bold;">Together, we're making a difference! 🌍</p>
+  </section>
+
+  <footer>
+    <p>© 2024 SwiftBuy. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function initSustainability() {
+      const purchases = JSON.parse(localStorage.getItem('cart')) || [];
+      const totalItems = purchases.reduce((sum, item) => sum + item.quantity, 0);
+      
+      document.getElementById('treesSaved').textContent = Math.floor(totalItems * 0.5);
+      document.getElementById('waterSaved').textContent = (totalItems * 10).toLocaleString();
+      document.getElementById('co2Reduced').textContent = (totalItems * 2.5).toFixed(1);
+    }
+    document.addEventListener('DOMContentLoaded', initSustainability);
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwiftBuy - Social Shopping</title>
+  <link rel="stylesheet" href="shared-styles.css">
+</head>
+<style>
+.social-shopping {
+  padding: 40px 20px;
+  background: rgba(255, 255, 255, 0.9);
+  margin: 30px 20px;
+  border-radius: 15px;
+}
+
+.social-actions {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin: 30px 0;
+}
+
+.social-btn {
+  padding: 15px 30px;
+  background: #0074D9;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1em;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.social-btn:hover {
+  background: #005BB5;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 116, 217, 0.3);
+}
+
+.referral-program {
+  padding: 40px 20px;
+  background: rgba(255, 255, 255, 0.9);
+  margin: 30px 20px;
+  border-radius: 15px;
+}
+
+.referral-card {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.referral-code {
+  text-align: center;
+  padding: 30px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 15px;
+  color: white;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.code-display {
+  font-size: 2.5em;
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  background: rgba(255, 255, 255, 0.2);
+  padding: 20px;
+  border-radius: 10px;
+  margin: 20px 0;
+}
+
+.referral-benefits ul {
+  list-style: none;
+  padding: 0;
+  text-align: left;
+}
+
+.referral-benefits li {
+  padding: 10px 0;
+  font-size: 1.1em;
+}
+
+@media (max-width: 768px) {
+  .referral-card {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+<body>
+  <header class="navbar">
+    <div class="logo">SwiftBuy</div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="social.html">Social</a></li>
+        <li><a href="cart.html">Cart</a></li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="social-shopping">
+    <h2 style="text-align: center; margin-bottom: 10px;">👥 Shop With Friends</h2>
+    <p class="subtitle" style="text-align: center; color: #666; margin-bottom: 30px;">Share products and get opinions from your network</p>
+    <div class="social-actions">
+      <button class="social-btn" onclick="shareProduct()">📤 Share a Product</button>
+      <button class="social-btn" onclick="createGroup()">👥 Create Shopping Group</button>
+      <button class="social-btn" onclick="viewShared()">👀 View Shared Items</button>
+    </div>
+  </section>
+
+  <section class="referral-program">
+    <h2 style="text-align: center; margin-bottom: 10px;">🎁 Refer & Earn</h2>
+    <p class="subtitle" style="text-align: center; color: #666; margin-bottom: 30px;">Share SwiftBuy with friends and earn rewards</p>
+    <div class="referral-card">
+      <div class="referral-code">
+        <h3>Your Referral Code</h3>
+        <div class="code-display" id="referralCode">SWIFT2024</div>
+        <button onclick="copyReferralCode()" style="padding: 12px 30px; background: white; color: #667eea; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Copy Code</button>
+      </div>
+      <div class="referral-benefits">
+        <h3>You Both Get:</h3>
+        <ul>
+          <li>✅ Rs. 500 off on first purchase</li>
+          <li>✅ Free shipping for 3 months</li>
+          <li>✅ Exclusive member discounts</li>
+          <li>✅ Early access to new products</li>
+          <li>✅ Special birthday rewards</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>© 2024 SwiftBuy. All rights reserved.</p>
+  </footer>
+
+  <script>
+    function copyReferralCode() {
+      const code = document.getElementById('referralCode').textContent;
+      navigator.clipboard.writeText(code).then(() => {
+        alert('Referral code copied! Share it with your friends!');
+      });
+    }
+
+    function shareProduct() {
+      if (navigator.share) {
+        navigator.share({
+          title: 'Check out SwiftBuy!',
+          text: 'I found some great products on SwiftBuy',
+          url: window.location.href
+        });
+      } else {
+        alert('Share feature: Copy this link to share with friends!\n' + window.location.href);
+      }
+    }
+
+    function createGroup() {
+      alert('Shopping Group feature coming soon! Create groups to shop together and get group discounts!');
+    }
+
+    function viewShared() {
+      alert('View shared items: See products your friends have shared with you!');
+    }
+  </script>
+</body>
+</html>
+

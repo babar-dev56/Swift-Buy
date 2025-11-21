@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwiftBuy - Shopable Videos & Tutorials</title>
+  <link rel="stylesheet" href="notifications.css">
+</head>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 50%, #90caf9 100%);
+  min-height: 100vh;
+}
+
+/* Navigation Bar */
+.navbar {
+  background-color: #0074D9;
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar .logo {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 15px;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: white;
+  font-size: 1em;
+  transition: all 0.3s ease;
+  padding: 5px 10px;
+  border-radius: 3px;
+}
+
+.nav-links li a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Header Section */
+.videos-header {
+  text-align: center;
+  padding: 40px 20px;
+  background: linear-gradient(135deg, rgba(0, 116, 217, 0.1) 0%, rgba(0, 91, 181, 0.1) 100%);
+  backdrop-filter: blur(10px);
+  margin: 20px;
+  border-radius: 15px;
+}
+
+.videos-header h1 {
+  font-size: 2.5em;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.videos-header p {
+  font-size: 1.2em;
+  color: #666;
+}
+
+/* Tabs Navigation */
+.tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+
+.tab-btn {
+  padding: 12px 25px;
+  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+  border: 2px solid rgba(0, 116, 217, 0.2);
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 1em;
+  font-weight: bold;
+  color: #333;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.tab-btn:hover {
+  background: linear-gradient(145deg, #0074D9 0%, #005BB5 100%);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 116, 217, 0.3);
+}
+
+.tab-btn.active {
+  background: linear-gradient(145deg, #0074D9 0%, #005BB5 100%);
+  color: white;
+  border-color: #0074D9;
+}
+
+/* Tab Content */
+.tab-content {
+  display: none;
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.tab-content.active {
+  display: block;
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Video Grid */
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 25px;
+  padding: 20px 0;
+}
+
+/* Video Card */
+.video-card {
+  background: linear-gradient(145deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(0, 116, 217, 0.1);
+  cursor: pointer;
+}
+
+.video-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 30px rgba(0, 116, 217, 0.2);
+}
+
+.video-thumbnail {
+  position: relative;
+  width: 100%;
+  padding-top: 56.25%; /* 16:9 Aspect Ratio */
+  background: #000;
+  overflow: hidden;
+}
+
+.video-thumbnail img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70px;
+  height: 70px;
+  background: rgba(0, 116, 217, 0.9);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2em;
+  color: white;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.video-card:hover .play-button {
+  background: rgba(0, 91, 181, 1);
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.video-duration {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.9em;
+}
+
+.video-info {
+  padding: 20px;
+}
+
+.video-title {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.video-description {
+  color: #666;
+  font-size: 0.95em;
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+.video-products {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.product-tag {
+  background: linear-gradient(135deg, #0074D9 0%, #005BB5 100%);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.product-tag:hover {
+  transform: scale(1.05);
+  box-shadow: 0 2px 10px rgba(0, 116, 217, 0.3);
+}
+
+.live-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #ff4444;
+  color: white;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  animation: pulse 2s infinite;
+}
+
+.live-badge::before {
+  content: '●';
+  animation: blink 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Video Modal */
+.video-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.video-modal.active {
+  display: flex;
+}
+
+.modal-content {
+  position: relative;
+  max-width: 1200px;
+  width: 100%;
+  background: #000;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.5em;
+  cursor: pointer;
+  z-index: 1001;
+  transition: all 0.3s ease;
+}
+
+.close-modal:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+.video-player {
+  width: 100%;
+  aspect-ratio: 16/9;
+  background: #000;
+}
+
+.shopable-products-panel {
+  background: white;
+  padding: 20px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.shopable-products-panel h3 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.product-item {
+  display: flex;
+  gap: 15px;
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.product-item:hover {
+  background: #f5f5f5;
+}
+
+.product-item img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.product-item-info {
+  flex: 1;
+}
+
+.product-item-info h4 {
+  margin: 0 0 5px 0;
+  color: #333;
+  font-size: 1em;
+}
+
+.product-item-info .price {
+  color: #0074D9;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+.add-to-cart-btn {
+  background: #0074D9;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: all 0.3s ease;
+}
+
+.add-to-cart-btn:hover {
+  background: #005BB5;
+  transform: scale(1.05);
+}
+
+/* Footer */
+footer {
+  background-color: #0074D9;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  margin-top: 50px;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .video-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .tabs {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .tab-btn {
+    width: 100%;
+  }
+}
+</style>
+
+<body>
+  <!-- Navigation Bar -->
+  <header class="navbar">
+    <div class="logo">SwiftBuy</div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="products.html">Products</a></li>
+        <li><a href="brands.html">Brands</a></li>
+        <li><a href="videos.html">Videos</a></li>
+        <li><a href="cart.html">Cart</a></li>
+        <li>
+          <div class="notification-bell" id="notificationBell" onclick="toggleNotificationCenter()">
+            🔔
+            <span id="notificationBadge"></span>
+          </div>
+        </li>
+        <li><a href="login.html">Login</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Header Section -->
+  <section class="videos-header">
+    <h1>🎥 Shopable Videos & Tutorials</h1>
+    <p>Watch, Learn, and Shop - All in One Place!</p>
+  </section>
+
+  <!-- Tabs Navigation -->
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('shopable')">🛍️ Shopable Videos</button>
+    <button class="tab-btn" onclick="switchTab('tutorials')">📚 Product Tutorials</button>
+    <button class="tab-btn" onclick="switchTab('live')">🔴 Live Shopping</button>
+  </div>
+
+  <!-- Shopable Videos Tab -->
+  <div id="shopable" class="tab-content active">
+    <div class="video-grid">
+      <div class="video-card" onclick="openVideo('shopable1')">
+        <div class="video-thumbnail">
+          <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Product Demo">
+          <div class="play-button">▶</div>
+          <div class="video-duration">5:30</div>
+        </div>
+        <div class="video-info">
+          <div class="video-title">Lenovo IdeaPad 3 - Complete Review & Setup</div>
+          <div class="video-description">Watch our detailed review of the Lenovo IdeaPad 3 laptop. See it in action and learn about all its features!</div>
+          <div class="video-products">
+            <a href="#" class="product-tag" onclick="event.stopPropagation(); addToCart('Lenovo IdeaPad 3', 80000)">Lenovo IdeaPad 3 - RS:80,000</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="video-card" onclick="openVideo('shopable2')">
+        <div class="video-thumbnail">
+          <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Product Demo">
+          <div class="play-button">▶</div>
+          <div class="video-duration">4:15</div>
+        </div>
+        <div class="video-info">
+          <div class="video-title">HyperX Cloud 2 Gaming Headset - Sound Test</div>
+          <div class="video-description">Experience the amazing sound quality of HyperX Cloud 2. Perfect for gaming and music!</div>
+          <div class="video-products">
+            <a href="#" class="product-tag" onclick="event.stopPropagation(); addToCart('Hyper X Cloud 2 (HeadPhones)', 25000)">HyperX Cloud 2 - RS:25,000</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="video-card" onclick="openVideo('shopable3')">
+        <div class="video-thumbnail">
+          <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Product Demo">
+          <div class="play-button">▶</div>
+          <div class="video-duration">6:20</div>
+        </div>
+        <div class="video-info">
+          <div class="video-title">Fashion Haul - Latest Trends 2024</div>
+          <div class="video-description">Check out the latest fashion trends! See how to style these amazing pieces.</div>
+          <div class="video-products">
+            <a href="#" class="product-tag" onclick="event.stopPropagation(); addToCart('Mens Track Suit', 2200)">Track Suit - RS:2,200</a>
+            <a href="#" class="product-tag" onclick="event.stopPropagation(); addToCart('Formal Shirt', 1400)">Formal Shirt - RS:1,400</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="video-card" onclick="openVideo('shopable4')">
+        <div class="video-thumbnail">
+          <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Product Demo">
+          <div class="play-button">▶</div>
+          <div class="video-duration">7:45</div>
+        </div>
+        <div class="video-info">
+          <div class="video-title">Kitchen Essentials - Must Have Appliances</div>
+          <div class="video-description">Discover the best kitchen appliances for your home. See them in action!</div>
+          <div class="video-products">
+            <a href="#" class="product-tag" onclick="event.stopPropagation(); addToCart('Juicer Blender', 1650)">Juicer Blender - RS:1,650</a>
+            <a href="#" class="product-tag" onclick="event.stopPropagation(); addToCart('Electric Kettle', 4500)">Electric Kettle - RS:4,500</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Tutorials Tab -->
+  <div id="tutorials" class="tab-content">
+    <div class="video-grid">
+      <div class="video-card" onclick="openVideo('tutorial1')">
+        <div class="video-thumbnail">
+          <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Tutorial">
+          <div class="play-button">▶</div>
+          <div class="video-duration">8:10</div>
+        </div>
+        <div class="video-info">
+          <div class="video-title">How to Set Up Your New Laptop - Step by Step Guide</div>
+          <div class="video-description">Complete beginner-friendly tutorial on setting up your new laptop. We cover everything from unboxing to first use.</div>
+          <div class="video-products">
+            <a href="#" class="product-tag" onclick="event.stopPropagation(); addToCart('Lenovo IdeaPad 3', 80000)">Buy Laptop</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="video-card" onclick="openVideo('tutorial2')">
+        <div class="video-thumbnail">
+          <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Tutorial">
+          <div class="play-button">▶</div>
+          <div class="video-duration">5:30</div>
+        </div>
+        <div class="video-info">
+          <div class="video-title">Gaming Headset Setup & Optimization</div>
+          <div class="video-description">Learn how to get the best audio experience from your gaming headset. Tips and tricks included!</div>
+          <div class="video-products">
+            <a href="#" class="product-tag" onclick="event.stopPropagation(); addToCart('Hyper X Cloud 2 (HeadPhones)', 25000)">Buy Headset</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="video-card" onclick="openVideo('tutorial3')">
+        <div class="video-thumbnail">
+          <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Tutorial">
+          <div class="play-button">▶</div>
+          <div class="video-duration">10:25</div>
+        </div>
+        <div class="video-info">
+          <div class="video-title">Juicer Blender - Complete Usage Guide</div>
+          <div class="video-description">Master your juicer blender! Learn how to make smoothies, juices, and more. Recipe ideas included!</div>
+          <div class="video-products">
+            <a href="#" class="product-tag" onclick="event.stopPropagation(); addToCart('Juicer Blender', 1650)">Buy Blender</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="video-card" onclick="openVideo('tutorial4')">
+        <div class="video-thumbnail">
+          <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Tutorial">
+          <div class="play-button">▶</div>
+          <div class="video-duration">6:40</div>
+        </div>
+        <div class="video-info">
+          <div class="video-title">Electric Kettle Safety & Maintenance</div>
+          <div class="video-description">Important safety tips and maintenance guide for your electric kettle. Keep it running perfectly!</div>
+          <div class="video-products">
+            <a href="#" class="product-tag" onclick="event.stopPropagation(); addToCart('Electric Kettle', 4500)">Buy Kettle</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Live Shopping Tab -->
+  <div id="live" class="tab-content">
+    <div class="video-grid">
+      <div class="video-card" onclick="openVideo('live1')">
+        <div class="video-thumbnail">
+          <div class="live-badge">LIVE</div>
+          <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Live Shopping">
+          <div class="play-button">▶</div>
+        </div>
+        <div class="video-info">
+          <div class="video-title">🔴 LIVE: Electronics Flash Sale</div>
+          <div class="video-description">Join us for exclusive deals on electronics! Limited time offers only during this live session.</div>
+          <div class="video-products">
+            <a href="#" class="product-tag" onclick="event.stopPropagation(); addToCart('Lenovo IdeaPad 3', 80000)">Laptop Deal</a>
+            <a href="#" class="product-tag" onclick="event.stopPropagation(); addToCart('Hyper X Cloud 2 (HeadPhones)', 25000)">Headset Deal</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="video-card" onclick="openVideo('live2')">
+        <div class="video-thumbnail">
+          <div class="live-badge">LIVE</div>
+          <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Live Shopping">
+          <div class="play-button">▶</div>
+        </div>
+        <div class="video-info">
+          <div class="video-title">🔴 LIVE: Fashion Showcase</div>
+          <div class="video-description">See the latest fashion trends live! Try on session and styling tips from our fashion experts.</div>
+          <div class="video-products">
+            <a href="#" class="product-tag" onclick="event.stopPropagation(); addToCart('Mens Track Suit', 2200)">Track Suit</a>
+            <a href="#" class="product-tag" onclick="event.stopPropagation(); addToCart('Formal Shirt', 1400)">Formal Shirt</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="video-card" onclick="openVideo('live3')">
+        <div class="video-thumbnail">
+          <img src="https://img.youtube.com/vi/dQw4w9WgXcQ/maxresdefault.jpg" alt="Upcoming Live">
+          <div class="play-button">▶</div>
+          <div class="video-duration">Starts in 2h</div>
+        </div>
+        <div class="video-info">
+          <div class="video-title">⏰ Upcoming: Kitchen Essentials Sale</div>
+          <div class="video-description">Don't miss our upcoming live sale on kitchen appliances! Set a reminder now.</div>
+          <div class="video-products">
+            <a href="#" class="product-tag" onclick="event.stopPropagation(); addToCart('Juicer Blender', 1650)">View Products</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Video Modal -->
+  <div class="video-modal" id="videoModal">
+    <div class="modal-content">
+      <button class="close-modal" onclick="closeVideo()">×</button>
+      <div class="video-player" id="videoPlayer">
+        <!-- Video will be embedded here -->
+      </div>
+      <div class="shopable-products-panel" id="productsPanel">
+        <h3>🛍️ Shop Products from this Video</h3>
+        <div id="productsList"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2024 SwiftBuy. All rights reserved.</p>
+  </footer>
+
+  <script src="ai-recommendations.js"></script>
+  <script src="notifications.js"></script>
+  <script src="pcfunction.js"></script>
+  <script>
+    // Video data
+    const videoData = {
+      shopable1: {
+        videoId: 'dQw4w9WgXcQ',
+        products: [
+          { name: 'Lenovo IdeaPad 3', price: 80000, image: 'https://static3.webx.pk/files/19643/Images/lenovo-ideapad-3-15iau7-laptop-price-in-pakistan-2-19643-0-100124121714584.jpg' }
+        ]
+      },
+      shopable2: {
+        videoId: 'dQw4w9WgXcQ',
+        products: [
+          { name: 'Hyper X Cloud 2 (HeadPhones)', price: 25000, image: 'https://thegamesmen.pk/wp-content/uploads/2024/08/hyperx_cloud_ii_red_2_main_mixer_900x.webp' }
+        ]
+      },
+      shopable3: {
+        videoId: 'dQw4w9WgXcQ',
+        products: [
+          { name: 'Mens Track Suit', price: 2200, image: 'https://auagarments.pk/cdn/shop/products/WhatsAppImage2023-12-18at16.10.21_19860bff.jpg?v=1703858528' },
+          { name: 'Formal Shirt', price: 1400, image: 'https://5.imimg.com/data5/YD/AP/LT/ANDROID-102906917/product-jpeg-500x500.jpeg' }
+        ]
+      },
+      shopable4: {
+        videoId: 'dQw4w9WgXcQ',
+        products: [
+          { name: 'Juicer Blender', price: 1650, image: 'https://estore.gabanational.net.pk/cdn/shop/products/9e570dd3-eaf2-435b-b0dc-41fb95ab8c5f.jpg?v=1663063968' },
+          { name: 'Electric Kettle', price: 4500, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgINzPBo02sk3xLlUINjwYJ-bA9tIoQKeALg&s' }
+        ]
+      },
+      tutorial1: {
+        videoId: 'dQw4w9WgXcQ',
+        products: [
+          { name: 'Lenovo IdeaPad 3', price: 80000, image: 'https://static3.webx.pk/files/19643/Images/lenovo-ideapad-3-15iau7-laptop-price-in-pakistan-2-19643-0-100124121714584.jpg' }
+        ]
+      },
+      tutorial2: {
+        videoId: 'dQw4w9WgXcQ',
+        products: [
+          { name: 'Hyper X Cloud 2 (HeadPhones)', price: 25000, image: 'https://thegamesmen.pk/wp-content/uploads/2024/08/hyperx_cloud_ii_red_2_main_mixer_900x.webp' }
+        ]
+      },
+      tutorial3: {
+        videoId: 'dQw4w9WgXcQ',
+        products: [
+          { name: 'Juicer Blender', price: 1650, image: 'https://estore.gabanational.net.pk/cdn/shop/products/9e570dd3-eaf2-435b-b0dc-41fb95ab8c5f.jpg?v=1663063968' }
+        ]
+      },
+      tutorial4: {
+        videoId: 'dQw4w9WgXcQ',
+        products: [
+          { name: 'Electric Kettle', price: 4500, image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgINzPBo02sk3xLlUINjwYJ-bA9tIoQKeALg&s' }
+        ]
+      },
+      live1: {
+        videoId: 'dQw4w9WgXcQ',
+        products: [
+          { name: 'Lenovo IdeaPad 3', price: 80000, image: 'https://static3.webx.pk/files/19643/Images/lenovo-ideapad-3-15iau7-laptop-price-in-pakistan-2-19643-0-100124121714584.jpg' },
+          { name: 'Hyper X Cloud 2 (HeadPhones)', price: 25000, image: 'https://thegamesmen.pk/wp-content/uploads/2024/08/hyperx_cloud_ii_red_2_main_mixer_900x.webp' }
+        ]
+      },
+      live2: {
+        videoId: 'dQw4w9WgXcQ',
+        products: [
+          { name: 'Mens Track Suit', price: 2200, image: 'https://auagarments.pk/cdn/shop/products/WhatsAppImage2023-12-18at16.10.21_19860bff.jpg?v=1703858528' },
+          { name: 'Formal Shirt', price: 1400, image: 'https://5.imimg.com/data5/YD/AP/LT/ANDROID-102906917/product-jpeg-500x500.jpeg' }
+        ]
+      },
+      live3: {
+        videoId: 'dQw4w9WgXcQ',
+        products: [
+          { name: 'Juicer Blender', price: 1650, image: 'https://estore.gabanational.net.pk/cdn/shop/products/9e570dd3-eaf2-435b-b0dc-41fb95ab8c5f.jpg?v=1663063968' }
+        ]
+      }
+    };
+
+    // Tab switching
+    function switchTab(tabName) {
+      // Hide all tabs
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Remove active class from all buttons
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // Show selected tab
+      document.getElementById(tabName).classList.add('active');
+      
+      // Add active class to clicked button
+      event.target.classList.add('active');
+    }
+
+    // Open video modal
+    function openVideo(videoKey) {
+      const data = videoData[videoKey];
+      if (!data) return;
+
+      const modal = document.getElementById('videoModal');
+      const player = document.getElementById('videoPlayer');
+      const productsList = document.getElementById('productsList');
+
+      // Embed video (using YouTube embed as example)
+      player.innerHTML = `
+        <iframe 
+          width="100%" 
+          height="100%" 
+          src="https://www.youtube.com/embed/${data.videoId}?autoplay=1" 
+          frameborder="0" 
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+          allowfullscreen>
+        </iframe>
+      `;
+
+      // Display products
+      productsList.innerHTML = data.products.map(product => `
+        <div class="product-item" onclick="addToCart('${product.name}', ${product.price})">
+          <img src="${product.image}" alt="${product.name}" onerror="this.src='https://via.placeholder.com/80x80?text=Product'">
+          <div class="product-item-info">
+            <h4>${product.name}</h4>
+            <div class="price">RS: ${product.price.toLocaleString()}</div>
+          </div>
+          <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart('${product.name}', ${product.price})">Add to Cart</button>
+        </div>
+      `).join('');
+
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Close video modal
+    function closeVideo() {
+      const modal = document.getElementById('videoModal');
+      const player = document.getElementById('videoPlayer');
+      
+      modal.classList.remove('active');
+      player.innerHTML = '';
+      document.body.style.overflow = 'auto';
+    }
+
+    // Close modal on outside click
+    document.getElementById('videoModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeVideo();
+      }
+    });
+
+    // Close modal on ESC key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeVideo();
+      }
+    });
+  </script>
+</body>
+</html>
+
